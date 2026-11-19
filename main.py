@@ -9,14 +9,34 @@ def main():
     base_window.geometry("800x800")
     base_window.config(bg=BACKGROUND) #type: ignore
 
-    #login_page = LoginPage(base_window)
-    register_page = RegisterPage(base_window)
-    #home_screen = HomeScreen(base_window)
+    app = App(base_window)
+    app.login_page()
 
     base_window.mainloop()
 
+class App(object):
+    def __init__(self, window):
+        self.window = window
 
 
+    def home_screen(self):
+        HomeScreen(self.window, app=self)
+
+
+    def login_page(self):
+        for widget in self.window.winfo_children():
+            widget.destroy()
+        LoginPage(self.window, app=self)
+
+    def register_page(self):
+        for widget in self.window.winfo_children():
+            widget.destroy()
+        RegisterPage(self.window, app=self)
+
+    def logout(self):
+        for widget in self.window.winfo_children():
+            widget.destroy()
+        LoginPage(self.window, app=self)
 
 if __name__ == "__main__":
     main()

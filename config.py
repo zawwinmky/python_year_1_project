@@ -9,4 +9,4 @@ WHITE = "#FFFFFF"
 TITLE = ("Arial", 25)
 LABEL_16 = ("Arial", 16)
 LABEL_14 = ("Arial", 14)
-LABEL_12 = ("Arial", 14)
+LABEL_12 = ("Arial", 12)

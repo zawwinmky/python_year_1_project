@@ -1,9 +1,12 @@
-from config import *
+from config import * # type: ignore
 from tkinter import *
 from tkinter import messagebox as mb
 
+
 class LoginPage(object):
-    def __init__(self, parent_window):
+    def __init__(self, parent_window, app):
+        self.window = parent_window
+        self.app = app
         self.login_frame = Frame(master=parent_window, bg=BACKGROUND) # type: ignore
         #labels
         login_label = Label(master=self.login_frame, text="Login", bg=BACKGROUND, fg=BLACK, font=TITLE) # type: ignore
@@ -12,11 +15,11 @@ class LoginPage(object):
 
         #entries
         self.email_entry = Entry(master=self.login_frame, bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12) #type: ignore
-        self.password_entry = Entry(master=self.login_frame, bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12) #type: ignore
+        self.password_entry = Entry(master=self.login_frame, show="*", bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12) #type: ignore
 
         #buttons
         login_btn = Button(master=self.login_frame, text="Login", bg=WHITE, font=LABEL_14, command=self.login) #type: ignore
-        register_btn = Button(master=self.login_frame, text="Register", bg=WHITE, font=LABEL_12) #type: ignore
+        register_btn = Button(master=self.login_frame, text="Register", bg=WHITE, font=LABEL_12, command=self.app.register_page) #type: ignore
 
         #placing the frames and items
         self.login_frame.pack()
@@ -35,10 +38,18 @@ class LoginPage(object):
         self.email_entry.focus()
 
     def login(self):
-        print("Test login")
+        #if login success
+        self.clear()
+        self.app.home_screen()
+
+    def clear(self):
+        for widget in self.window.winfo_children():
+            widget.destroy()
 
 class RegisterPage(object):
-    def __init__(self, parent_window):
+    def __init__(self, parent_window, app):
+        self.window = parent_window
+        self.app = app
         self.register_frame = Frame(master=parent_window, bg=BACKGROUND) # type: ignore
         #labels
         register_label = Label(master=self.register_frame, text="Register", bg=BACKGROUND, fg=BLACK, font=TITLE) # type: ignore
@@ -50,12 +61,12 @@ class RegisterPage(object):
         #entries
         self.name_entry = Entry(master=self.register_frame, bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12) #type: ignore
         self.email_entry = Entry(master=self.register_frame, bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12) #type: ignore
-        self.password_entry = Entry(master=self.register_frame, bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12) #type: ignore
-        self.cpassword_entry = Entry(master=self.register_frame, bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12) #type: ignore
+        self.password_entry = Entry(master=self.register_frame, show="*", bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12) #type: ignore
+        self.cpassword_entry = Entry(master=self.register_frame, show="*", bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12) #type: ignore
 
         #buttons
         register_btn = Button(master=self.register_frame, text="Register", bg=WHITE, font=LABEL_14, command=self.register) #type: ignore
-        login_btn = Button(master=self.register_frame, text="Login", bg=WHITE, font=LABEL_12) #type: ignore
+        login_btn = Button(master=self.register_frame, text="Login", bg=WHITE, font=LABEL_12, command=self.app.login_page) #type: ignore
 
         self.register_frame.pack()
 
@@ -79,4 +90,7 @@ class RegisterPage(object):
 
 
     def register(self):
-        print("Register")
+        #if register success
+        for widget in self.window.winfo_children():
+            widget.destroy()
+        self.app.home_screen()
