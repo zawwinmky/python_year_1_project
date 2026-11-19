@@ -3,7 +3,7 @@
 BACKGROUND = "#BEE391" #main bg color
 BLACK = "#000000"
 WHITE = "#FFFFFF"
-
+TOP_BAR_BG = "#AABBCC"
 
 #fonts
 TITLE = ("Arial", 25)

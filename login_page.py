@@ -1,7 +1,8 @@
 from config import * # type: ignore
 from tkinter import *
 from tkinter import messagebox as mb
-
+import database as db
+from database import LoginError, RegisterError
 
 class LoginPage(object):
     def __init__(self, parent_window, app):
@@ -38,13 +39,17 @@ class LoginPage(object):
         self.email_entry.focus()
 
     def login(self):
-        #if login success
-        self.clear()
+        email = self.email_entry.get()
+        password = self.password_entry.get()
+
+        try:
+            user = db.check_login(email, password)
+        except LoginError as error:
+            mb.showerror("Error", str(error))
+            return
+
         self.app.home_screen()
 
-    def clear(self):
-        for widget in self.window.winfo_children():
-            widget.destroy()
 
 class RegisterPage(object):
     def __init__(self, parent_window, app):
@@ -90,7 +95,16 @@ class RegisterPage(object):
 
 
     def register(self):
-        #if register success
-        for widget in self.window.winfo_children():
-            widget.destroy()
-        self.app.home_screen()
+        name = self.name_entry.get()
+        email = self.email_entry.get()
+        password = self.password_entry.get()
+        confirm_password = self.cpassword_entry.get()
+
+        try:
+            db.add_user(name, email, password, confirm_password)
+        except RegisterError as error:
+            mb.showerror("Error", str(error))
+            return
+
+        mb.showinfo("Success", "Account created! You can log in now.")
+        self.app.login_page()

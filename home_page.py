@@ -9,11 +9,11 @@ class HomeScreen(object):
         self.home_screen.pack(fill='both', expand=True)
 
         #top bar
-        top_bar = Frame(master=self.home_screen, height=100, background="#aabbcc")
+        top_bar = Frame(master=self.home_screen, height=100, background=TOP_BAR_BG) #type: ignore
         top_bar.pack(side='top', fill="x")
 
         #itmes inside topbar
-        title_label = Label(master=top_bar, text="Email App", bg=BACKGROUND, fg=BLACK, font=LABEL_16) #type: ignore
+        title_label = Label(master=top_bar, text="Email App", bg=TOP_BAR_BG, fg=BLACK, font=LABEL_16) #type: ignore
         title_label.pack(side="left", padx=15)
 
         profile_btn = Button(master=top_bar, text="👤", bg=WHITE, font=LABEL_12, command=self.profile) #type: ignore

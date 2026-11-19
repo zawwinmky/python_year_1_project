@@ -2,8 +2,11 @@ from config import * #type: ignore
 from tkinter import *
 from login_page import LoginPage, RegisterPage #type: ignore
 from home_page import HomeScreen #type: ignore
+import database as db
 
 def main():
+    db.create_tables()
+
     base_window = Tk()
     base_window.title("Email app")
     base_window.geometry("800x800")
@@ -20,6 +23,8 @@ class App(object):
 
 
     def home_screen(self):
+        for widget in self.window.winfo_children():
+            widget.destroy()
         HomeScreen(self.window, app=self)
 
 
