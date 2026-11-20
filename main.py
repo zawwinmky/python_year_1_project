@@ -9,7 +9,7 @@ def main():
 
     base_window = Tk()
     base_window.title("Email app")
-    base_window.geometry("800x800")
+    base_window.geometry("1000x800")
     base_window.config(bg=BACKGROUND) #type: ignore
 
     app = App(base_window)
@@ -24,22 +24,22 @@ class App(object):
 
     def home_screen(self, user):
         self.current_user = {"id": user["id"], "name": user["name"], "email": user["email"]}
-        self.clear()
+        self.clear_screen()
         HomeScreen(self.window, app=self)
 
     def login_page(self):
-        self.clear()
+        self.clear_screen()
         LoginPage(self.window, app=self)
 
     def register_page(self):
-        self.clear()
+        self.clear_screen()
         RegisterPage(self.window, app=self)
 
     def logout(self):
-        self.clear()
+        self.clear_screen()
         LoginPage(self.window, app=self)
 
-    def clear(self):
+    def clear_screen(self):
         for widget in self.window.winfo_children():
             widget.destroy()
 

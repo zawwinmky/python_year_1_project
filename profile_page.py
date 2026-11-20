@@ -59,8 +59,8 @@ class ProfilePage(object):
 
 
     def update_profile(self):
-        new_name = self.name_entry.get()
-        new_email = self.email_entry.get()
+        new_name = self.name_entry.get().strip()
+        new_email = self.email_entry.get().strip().lower()
 
         try:
             db.update_profile(self.user["id"], new_name, new_email)
@@ -68,8 +68,8 @@ class ProfilePage(object):
             mb.showerror("Error", str(error))
             return
 
-        self.user["name"] = new_name.strip()
-        self.user["email"] = new_email.strip().lower()
+        self.user["name"] = new_name
+        self.user["email"] = new_email
         mb.showinfo("Success", "Profile updated.")
 
 

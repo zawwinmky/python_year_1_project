@@ -1,23 +1,28 @@
 import sqlite3
 import os
 from werkzeug.security import generate_password_hash, check_password_hash #type: ignore
+from datetime import datetime as dt
 
 
 FOLDER = os.path.dirname(os.path.abspath(__file__))
 DATABASE = os.path.join(FOLDER, "email_app.db")
 
 
-class DatabaseError(Exception):
+class AppError(Exception):
     pass
 
-class RegisterError(Exception):
+class RegisterError(AppError):
     pass
 
-class LoginError(Exception):
+class LoginError(AppError):
     pass
 
-class ProfileError(Exception):
+class ProfileError(AppError):
     pass
+
+class EmailError(AppError):
+    pass
+
 
 def create_connection():
     connection = sqlite3.connect(DATABASE)
@@ -37,6 +42,21 @@ def create_tables():
             password TEXT NOT NULL )
             """
     cursor.execute(user_table)
+
+    email_table = """
+            CREATE TABLE IF NOT EXISTS emails (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            sender INTEGER NOT NULL,
+            receiver INTEGER NOT NULL,
+            subject TEXT NOT NULL,
+            body TEXT NOT NULL,
+            timestamp TEXT NOT NULL,
+            FOREIGN KEY (sender) REFERENCES users (id),
+            FOREIGN KEY (receiver) REFERENCES users (id) )
+            """
+
+    cursor.execute(email_table)
+
     connection.commit()
     connection.close()
 
@@ -51,9 +71,6 @@ def find_user_by_email(email):
 
 
 def add_user(name, email, password, cpassword):
-    name = name.strip()
-    email = email.strip().lower()
-
     if name == "" or email == "" or password == "" or cpassword == "":
         raise RegisterError("Pls fill in all fields!")
 
@@ -81,9 +98,6 @@ def add_user(name, email, password, cpassword):
 
 
 def check_login(email, password):
-    email = email.strip().lower()
-    password = password
-
     if email == "" or password == "":
         raise LoginError("Enter your email and password!")
 
@@ -100,8 +114,6 @@ def check_login(email, password):
 
 def update_profile(user_id, new_name, new_email):
     """Change the name and email of a user. Raises a ProfileError if something is wrong."""
-    new_name = new_name.strip()
-    new_email = new_email.strip().lower()
 
     if new_name == "" or new_email == "":
         raise ProfileError("Name and email cannot be empty.")
@@ -149,5 +161,24 @@ def change_password(user_id, current_password, new_password, confirm_password):
     connection = create_connection()
     cursor = connection.cursor()
     cursor.execute("UPDATE users SET password = ? WHERE id = ?", (new_hash, user_id))
+    connection.commit()
+    connection.close()
+
+def send_email(sender_id,receiver_email, subject, body_message):
+
+    if receiver_email == "" or subject == "" or body_message == "":
+        raise EmailError("Pls fill in all the required")
+
+    receiver = find_user_by_email(receiver_email)
+
+    if receiver is None:
+        raise EmailError("There is no user with that email.")
+
+    time = dt.now()
+
+    connection = create_connection()
+    cursor = connection.cursor()
+    command = "INSERT INTO emails (sender, receiver, subject, body, timestamp) VALUES (?, ?, ?, ?, ?)"
+    cursor.execute(command, (sender_id, receiver["id"], subject, body_message, time))
     connection.commit()
     connection.close()

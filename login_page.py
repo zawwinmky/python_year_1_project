@@ -39,8 +39,8 @@ class LoginPage(object):
         self.email_entry.focus()
 
     def login(self):
-        email = self.email_entry.get()
-        password = self.password_entry.get()
+        email = self.email_entry.get().strip().lower()
+        password = self.password_entry.get().strip()
 
         try:
             user = db.check_login(email, password)
@@ -95,10 +95,10 @@ class RegisterPage(object):
 
 
     def register(self):
-        name = self.name_entry.get()
-        email = self.email_entry.get()
-        password = self.password_entry.get()
-        confirm_password = self.cpassword_entry.get()
+        name = self.name_entry.get().strip()
+        email = self.email_entry.get().strip().lower()
+        password = self.password_entry.get().strip()
+        confirm_password = self.cpassword_entry.get().strip()
 
         try:
             db.add_user(name, email, password, confirm_password)

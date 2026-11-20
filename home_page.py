@@ -1,10 +1,12 @@
 from config import * # type: ignore
 from tkinter import *
 from profile_page import ProfilePage
+from mail_page import InboxPage, SentPage, WriteEmail #type: ignore
 
 class HomeScreen(object):
     def __init__(self, parent_window, app):
         self.app = app
+        self.user = app.current_user
         self.home_screen = Frame(master=parent_window, background=BACKGROUND) #type: ignore
         self.home_screen.pack(fill='both', expand=True)
 
@@ -27,9 +29,9 @@ class HomeScreen(object):
         side_bar.pack(side="left", fill="y")
 
         #items inside sidebar
-        write_btn = Button(master=side_bar, text="Write Email", bg=WHITE, font=LABEL_12) #type: ignore
-        inbox_btn = Button(master=side_bar, text="Inbox", bg=WHITE, font=LABEL_12) #type: ignore
-        sentbox_btn = Button(master=side_bar, text="Sent", bg=WHITE, font=LABEL_12) #type: ignore
+        write_btn = Button(master=side_bar, text="Write Email", bg=WHITE, font=LABEL_12, command=self.write_email) #type: ignore
+        inbox_btn = Button(master=side_bar, text="Inbox", bg=WHITE, font=LABEL_12, command=self.show_inbox) #type: ignore
+        sentbox_btn = Button(master=side_bar, text="Sent", bg=WHITE, font=LABEL_12, command=self.show_sent_page) #type: ignore
 
         write_btn.pack(fill="x", padx=10, pady=(30, 5))
         inbox_btn.pack(fill="x", padx=10, pady=5)
@@ -38,8 +40,22 @@ class HomeScreen(object):
         self.content_area = Frame(master=self.home_screen, background=BACKGROUND) #type: ignore
         self.content_area.pack(side="left", fill="both", expand=True)
 
-
-    def profile(self):
+    def clear_content(self):
         for widget in self.content_area.winfo_children():
             widget.destroy()
+
+    def profile(self):
+        self.clear_content()
         ProfilePage(parent_frame=self.content_area, user=self.app.current_user)
+
+    def show_inbox(self):
+        self.clear_content()
+        InboxPage(parent_frame=self.content_area)
+
+    def show_sent_page(self):
+        self.clear_content()
+        SentPage(parent_frame=self.content_area)
+
+    def write_email(self):
+        self.clear_content()
+        WriteEmail(parent_frame=self.content_area, home = self)
