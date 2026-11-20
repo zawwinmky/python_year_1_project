@@ -42,4 +42,4 @@ class HomeScreen(object):
     def profile(self):
         for widget in self.content_area.winfo_children():
             widget.destroy()
-        ProfilePage(parent_frame=self.content_area)
+        ProfilePage(parent_frame=self.content_area, user=self.app.current_user)

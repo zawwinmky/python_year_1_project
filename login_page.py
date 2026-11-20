@@ -48,7 +48,7 @@ class LoginPage(object):
             mb.showerror("Error", str(error))
             return
 
-        self.app.home_screen()
+        self.app.home_screen(user)
 
 
 class RegisterPage(object):

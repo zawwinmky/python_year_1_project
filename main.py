@@ -20,28 +20,28 @@ def main():
 class App(object):
     def __init__(self, window):
         self.window = window
+        self.current_user = None
 
-
-    def home_screen(self):
-        for widget in self.window.winfo_children():
-            widget.destroy()
+    def home_screen(self, user):
+        self.current_user = {"id": user["id"], "name": user["name"], "email": user["email"]}
+        self.clear()
         HomeScreen(self.window, app=self)
 
-
     def login_page(self):
-        for widget in self.window.winfo_children():
-            widget.destroy()
+        self.clear()
         LoginPage(self.window, app=self)
 
     def register_page(self):
-        for widget in self.window.winfo_children():
-            widget.destroy()
+        self.clear()
         RegisterPage(self.window, app=self)
 
     def logout(self):
+        self.clear()
+        LoginPage(self.window, app=self)
+
+    def clear(self):
         for widget in self.window.winfo_children():
             widget.destroy()
-        LoginPage(self.window, app=self)
 
 if __name__ == "__main__":
     main()

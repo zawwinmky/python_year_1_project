@@ -1,8 +1,14 @@
 from config import * #type: ignore
 from tkinter import *
+import database as db
+from database import ProfileError
+from tkinter import messagebox as mb
+
 
 class ProfilePage(object):
-    def __init__(self, parent_frame):
+    def __init__(self, parent_frame, user):
+        self.user = user
+
         self.frame = Frame(master=parent_frame, bg=BACKGROUND) #type: ignore
         self.frame.pack(fill="both", expand=True, padx=30, pady=15)
 
@@ -12,6 +18,8 @@ class ProfilePage(object):
 
         self.name_entry = Entry(master=self.frame, bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12) #type: ignore
         self.email_entry = Entry(master=self.frame, bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12) #type: ignore
+        self.name_entry.insert(0, self.user["name"])
+        self.email_entry.insert(0, self.user["email"])
 
         update_btn = Button(master=self.frame, text="Update Profile", bg=WHITE, fg=BLACK, font=LABEL_12, command=self.update_profile) #type: ignore
 
@@ -20,11 +28,11 @@ class ProfilePage(object):
         password = Label(master=self.frame, text="New", bg=BACKGROUND, fg=BLACK, font=LABEL_14) #type: ignore
         cpassword = Label(master=self.frame, text="Confirm", bg=BACKGROUND, fg=BLACK, font=LABEL_14) #type: ignore
 
-        self.current_entry = Entry(master=self.frame, show="*", bg=WHITE, fg=BLACK, font=LABEL_12) #type: ignore
-        self.password_entry = Entry(master=self.frame, show="*", bg=WHITE, fg=BLACK, font=LABEL_12) #type: ignore
-        self.cpassword_entry = Entry(master=self.frame, show="*", bg=WHITE, fg=BLACK, font=LABEL_12) #type: ignore
+        self.current_entry = Entry(master=self.frame, show="*", bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12) #type: ignore
+        self.password_entry = Entry(master=self.frame, show="*", bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12) #type: ignore
+        self.cpassword_entry = Entry(master=self.frame, show="*", bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12) #type: ignore
 
-        change_pwd_btn = Button(master=self.frame, text="Update Profile", bg=WHITE, fg=BLACK, font=LABEL_12, command=self.change_pwd) #type: ignore
+        change_pwd_btn = Button(master=self.frame, text="Change Password", bg=WHITE, fg=BLACK, font=LABEL_12, command=self.change_pwd) #type: ignore
 
         title_label.grid(row=0, column=0, columnspan=2, pady=20, sticky="w")
 
@@ -50,10 +58,34 @@ class ProfilePage(object):
         change_pwd_btn.grid(row=8, column=1)
 
 
-
     def update_profile(self):
-        print("update profile")
+        new_name = self.name_entry.get()
+        new_email = self.email_entry.get()
+
+        try:
+            db.update_profile(self.user["id"], new_name, new_email)
+        except ProfileError as error:
+            mb.showerror("Error", str(error))
+            return
+
+        self.user["name"] = new_name.strip()
+        self.user["email"] = new_email.strip().lower()
+        mb.showinfo("Success", "Profile updated.")
 
 
     def change_pwd(self):
-        print("change password")
+        current_password = self.current_entry.get()
+        new_password = self.password_entry.get()
+        confirm_password = self.cpassword_entry.get()
+
+        try:
+            db.change_password(self.user["id"], current_password, new_password, confirm_password)
+        except ProfileError as error:
+            mb.showerror("Error", str(error))
+            return
+
+        # clear the password entries
+        self.current_entry.delete(0, END)
+        self.password_entry.delete(0, END)
+        self.cpassword_entry.delete(0, END)
+        mb.showinfo("Success", "Password changed successfully.")
