@@ -206,7 +206,7 @@ def get_sent_mails(user_id):
     cursor = connection.cursor()
     sent_box ="""
                 SELECT emails.id, emails.subject, emails.timestamp,
-                users.name AS name, users.email AS email
+                users.name AS other_name, users.email AS other_email
                 FROM emails
                 JOIN users ON emails.receiver = users.id
                 WHERE emails.sender = ?

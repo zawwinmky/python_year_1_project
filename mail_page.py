@@ -3,12 +3,16 @@ from config import * #type: ignore
 import database as db
 from tkinter import messagebox as mb
 from tkinter import ttk
+from abc import ABC, abstractmethod
 
 
-class InboxPage(object):
+class EmailPage(ABC):
+    title = ""
+    inbox_or_sent_box = ""
+
     def __init__(self, parent_frame, home):
-        self.title = "Inbox"
         self.home = home
+        self.user_id = home.user["id"]
         self.frame = Frame(master=parent_frame, bg=BACKGROUND) #type: ignore
         self.frame.pack(fill="both", expand=True, padx=15, pady=15)
 
@@ -31,7 +35,7 @@ class InboxPage(object):
         table_frame.pack(side="top", fill="both", expand=True, pady=(10, 0))
 
         self.table = ttk.Treeview(master=table_frame, columns=("person", "subject", "date"), show="headings", selectmode="browse")
-        self.table.heading("person", text="From")
+        self.table.heading("person", text=self.inbox_or_sent_box)
         self.table.heading("subject", text="Subject")
         self.table.heading("date", text="Date")
 
@@ -45,74 +49,37 @@ class InboxPage(object):
         self.table.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
 
-        self.display_email()
+        self.display_emails()
 
+    @abstractmethod
+    def get_emails(self):
+        pass
 
-    def get_inbox(self):
-        emails = db.get_inbox_mails(self.home.user["id"])
-        return emails
-
-    def display_email(self):
-        emails = self.get_inbox()
+    #this fn load the emails and insert into the Treeview table as rows
+    def display_emails(self):
+        emails = self.get_emails()
         for email in emails:
             person = f"{email["other_name"]} ({email["other_email"]})"
             self.table.insert("", END, iid=str(email["id"]), values=(person, email["subject"], email["timestamp"]))
 
 
-class SentPage(object):
-    def __init__(self, parent_frame, home):
 
-        self.home = home
+class InboxPage(EmailPage):
+    title = "Inbox"
+    inbox_or_sent_box = "From"
 
-        self.title = "Sent"
-        self.frame = Frame(master=parent_frame, bg=BACKGROUND) #type: ignore
-        self.frame.pack(fill="both", expand=True, padx=15, pady=15)
-
-        title_label = Label(master=self.frame, text=self.title, bg=BACKGROUND, fg=BLACK, font=LABEL_16) #type: ignore
-        title_label.pack(side="top", anchor="w")
-
-        bottom_bar = Frame(master=self.frame, bg=BACKGROUND) #type: ignore
-        bottom_bar.pack(side="bottom", fill="x", pady=(10, 0))
-
-        #buttons inside bottom frame
-        open_btn = Button(master=bottom_bar, text="Open", bg=WHITE, fg=BLACK, font=LABEL_10) #type: ignore
-        delete_btn = Button(master=bottom_bar, text="Delete", bg=WHITE, fg=BLACK, font=LABEL_10) #type: ignore
-        refresh_btn = Button(master=bottom_bar, text="Refresh", bg=WHITE, fg=BLACK, font=LABEL_10) #type: ignore
-
-        open_btn.pack(side="left", padx=(0,5))
-        delete_btn.pack(side="left", padx=5)
-        refresh_btn.pack(side="left", padx=5)
-
-        #table
-        table_frame = Frame(master=self.frame, background=BACKGROUND) #type: ignore
-        table_frame.pack(side="top", fill="both", expand=True, pady=(10, 0))
-
-        self.table = ttk.Treeview(master=table_frame, columns=("person", "subject", "date"), show="headings", selectmode="browse")
-        self.table.heading("person", text="To")
-        self.table.heading("subject", text="Subject")
-        self.table.heading("date", text="Date")
-
-        self.table.column("person", width=220)
-        self.table.column("subject", width=250)
-        self.table.column("date", width=120)
-
-        scrollbar = Scrollbar(master=table_frame, orient="vertical", command=self.table.yview)
-        self.table.configure(yscrollcommand=scrollbar.set)
-
-        self.table.pack(side="left", fill="both", expand=True)
-        scrollbar.pack(side="right", fill="y")
-
-        self.display_email()
+    def get_emails(self):
+        emails = db.get_inbox_mails(self.user_id)
+        return emails
 
 
-    def sent_box(self):
-        return db.get_sent_mails(self.home.user["id"])
+class SentPage(EmailPage):
+    title = "Sent"
+    inbox_or_sent_box = "To"
 
-    def display_email(self):
-        emails = self.sent_box()
-        for email in emails:
-            person = f"{email["name"]} ({email["email"]})"
-            self.table.insert("", END, iid=str(email["id"]), values=(person, email["subject"], email["timestamp"]))
+    def get_emails(self):
+        emails = db.get_sent_mails(self.user_id)
+        return emails
 
 
 
