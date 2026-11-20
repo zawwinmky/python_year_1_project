@@ -19,13 +19,13 @@ class HomeScreen(object):
         title_label.pack(side="left", padx=15)
 
         profile_btn = Button(master=top_bar, text="👤", bg=WHITE, font=LABEL_12, command=self.profile) #type: ignore
-        profile_btn.pack(side="right", padx=5, pady=5)
+        profile_btn.pack(side="right", padx=(5,15), pady=5)
 
         logout_btn = Button(master=top_bar, text="Logout", bg=WHITE, font=LABEL_12, command=self.app.logout) #type: ignore
         logout_btn.pack(side="right")
 
         #side bar
-        side_bar = Frame(master=self.home_screen, width=150, background="#231245")
+        side_bar = Frame(master=self.home_screen, width=150, background=SIDE_BAR) #type: ignore
         side_bar.pack(side="left", fill="y")
 
         #items inside sidebar
@@ -40,6 +40,8 @@ class HomeScreen(object):
         self.content_area = Frame(master=self.home_screen, background=BACKGROUND) #type: ignore
         self.content_area.pack(side="left", fill="both", expand=True)
 
+        self.show_inbox()
+
     def clear_content(self):
         for widget in self.content_area.winfo_children():
             widget.destroy()
@@ -50,12 +52,12 @@ class HomeScreen(object):
 
     def show_inbox(self):
         self.clear_content()
-        InboxPage(parent_frame=self.content_area)
+        InboxPage(parent_frame=self.content_area, home=self)
 
     def show_sent_page(self):
         self.clear_content()
-        SentPage(parent_frame=self.content_area)
+        SentPage(parent_frame=self.content_area, home=self)
 
     def write_email(self):
         self.clear_content()
-        WriteEmail(parent_frame=self.content_area, home = self)
+        WriteEmail(parent_frame=self.content_area, home=self)

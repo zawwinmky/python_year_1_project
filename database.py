@@ -182,3 +182,37 @@ def send_email(sender_id,receiver_email, subject, body_message):
     cursor.execute(command, (sender_id, receiver["id"], subject, body_message, time))
     connection.commit()
     connection.close()
+
+
+def get_inbox_mails(user_id):
+    connection = create_connection()
+    cursor = connection.cursor()
+    inbox_command ="""
+                    SELECT emails.id, emails.subject, emails.timestamp,
+                    users.name AS other_name, users.email AS other_email
+                    FROM emails
+                    JOIN users ON emails.sender = users.id
+                    WHERE emails.receiver = ?
+                    ORDER BY emails.id DESC """
+
+    cursor.execute(inbox_command, (user_id,))
+    emails = cursor.fetchall()
+    connection.close()
+    return emails
+
+
+def get_sent_mails(user_id):
+    connection = create_connection()
+    cursor = connection.cursor()
+    sent_box ="""
+                SELECT emails.id, emails.subject, emails.timestamp,
+                users.name AS name, users.email AS email
+                FROM emails
+                JOIN users ON emails.receiver = users.id
+                WHERE emails.sender = ?
+                ORDER BY emails.id DESC """
+
+    cursor.execute(sent_box, (user_id,))
+    emails = cursor.fetchall()
+    connection.close()
+    return emails
