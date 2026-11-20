@@ -27,10 +27,10 @@ class LoginPage(object):
 
         login_label.grid(column=0, row=0, columnspan=2, pady=30)
 
-        email_label.grid(column=0, row=1)
+        email_label.grid(column=0, row=1, sticky="w")
         self.email_entry.grid(column=1, row=1, pady=10)
 
-        password_label.grid(column=0, row=2)
+        password_label.grid(column=0, row=2, sticky="w")
         self.password_entry.grid(column=1, row=2, pady=10)
 
         login_btn.grid(column=0, row=3, columnspan=2, pady=20)
@@ -58,8 +58,8 @@ class RegisterPage(object):
         self.register_frame = Frame(master=parent_window, bg=BACKGROUND) # type: ignore
         #labels
         register_label = Label(master=self.register_frame, text="Register", bg=BACKGROUND, fg=BLACK, font=TITLE) # type: ignore
-        name_label = Label(master=self.register_frame, text="Name", bg=BACKGROUND, fg=BLACK, font=LABEL_14) #type: ignore
-        email_label = Label(master=self.register_frame, text="Email", bg=BACKGROUND, fg=BLACK, font=LABEL_14) # type: ignore
+        name_label = Label(master=self.register_frame, text="Name:", bg=BACKGROUND, fg=BLACK, font=LABEL_14) #type: ignore
+        email_label = Label(master=self.register_frame, text="Email:", bg=BACKGROUND, fg=BLACK, font=LABEL_14) # type: ignore
         password_label = Label(master=self.register_frame, text="Password:", bg=BACKGROUND, fg=BLACK, font=LABEL_14) #type: ignore
         cpassword_label = Label(master=self.register_frame, text="Confirm:", bg=BACKGROUND, fg=BLACK, font=LABEL_14) #type: ignore
 
@@ -78,16 +78,16 @@ class RegisterPage(object):
         #placing the items inside the register frame
         register_label.grid(row=0, column=0, columnspan=2, pady=30)
 
-        name_label.grid(row=1, column=0)
+        name_label.grid(row=1, column=0, sticky="w")
         self.name_entry.grid(row=1, column=1, pady=10)
 
-        email_label.grid(row=2, column=0)
+        email_label.grid(row=2, column=0, sticky="w")
         self.email_entry.grid(row=2, column=1, pady=10)
 
-        password_label.grid(row=3, column=0)
+        password_label.grid(row=3, column=0, sticky="w")
         self.password_entry.grid(row=3, column=1, pady=10)
 
-        cpassword_label.grid(row=4, column=0)
+        cpassword_label.grid(row=4, column=0, sticky="w")
         self.cpassword_entry.grid(row=4, column=1, pady=10)
 
         register_btn.grid(row=5, column=0, columnspan=2,  pady=10)
