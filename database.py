@@ -216,3 +216,28 @@ def get_sent_mails(user_id):
     emails = cursor.fetchall()
     connection.close()
     return emails
+
+
+def get_email_detail(email_id):
+    connection = create_connection()
+    cursor = connection.cursor()
+
+    command = """
+                SELECT emails.*,
+                sender.name AS sender_name,
+                sender.email AS sender_email,
+                receiver.name AS receiver_name,
+                receiver.email AS receiver_email
+                FROM emails
+                JOIN users AS sender ON emails.sender = sender.id
+                JOIN users AS receiver ON emails.receiver = receiver.id
+                WHERE emails.id = ? """
+
+    cursor.execute(command, (email_id,))
+
+    email = cursor.fetchone()
+    connection.close()
+    if email is None:
+        raise EmailError("Email not found!")
+
+    return email

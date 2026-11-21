@@ -62,6 +62,9 @@ class ProfilePage(object):
         new_name = self.name_entry.get().strip()
         new_email = self.email_entry.get().strip().lower()
 
+        if self.user["name"] == new_name and self.user["email"] == new_email:
+            return
+
         try:
             db.update_profile(self.user["id"], new_name, new_email)
         except ProfileError as error:

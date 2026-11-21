@@ -4,11 +4,13 @@ from tkinter import messagebox as mb
 import database as db
 from database import LoginError, RegisterError
 
+
 class LoginPage(object):
     def __init__(self, parent_window, app):
         self.window = parent_window
         self.app = app
         self.login_frame = Frame(master=parent_window, bg=BACKGROUND) # type: ignore
+
         #labels
         login_label = Label(master=self.login_frame, text="Login", bg=BACKGROUND, fg=BLACK, font=TITLE) # type: ignore
         email_label = Label(master=self.login_frame, text="Email", bg=BACKGROUND, fg=BLACK, font=LABEL_14) # type: ignore

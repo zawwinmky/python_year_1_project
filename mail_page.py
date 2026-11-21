@@ -4,11 +4,13 @@ import database as db
 from tkinter import messagebox as mb
 from tkinter import ttk
 from abc import ABC, abstractmethod
+from database import EmailError
 
 
 class EmailPage(ABC):
     title = ""
     inbox_or_sent_box = ""
+    box_type = ""
 
     def __init__(self, parent_frame, home):
         self.home = home
@@ -22,9 +24,9 @@ class EmailPage(ABC):
         bottom_bar = Frame(master=self.frame, bg=BACKGROUND) #type: ignore
         bottom_bar.pack(side="bottom", fill="x", pady=(10, 0))
 
-        open_btn = Button(master=bottom_bar, text="Open", bg=WHITE, fg=BLACK, font=LABEL_10) #type: ignore
+        open_btn = Button(master=bottom_bar, text="Open", bg=WHITE, fg=BLACK, font=LABEL_10, command=self.open_selected_email) #type: ignore
         delete_btn = Button(master=bottom_bar, text="Delete", bg=WHITE, fg=BLACK, font=LABEL_10) #type: ignore
-        refresh_btn = Button(master=bottom_bar, text="Refresh", bg=WHITE, fg=BLACK, font=LABEL_10) #type: ignore
+        refresh_btn = Button(master=bottom_bar, text="Refresh", bg=WHITE, fg=BLACK, font=LABEL_10, command=self.display_emails) #type: ignore
 
         open_btn.pack(side="left", padx=(0,5))
         delete_btn.pack(side="left", padx=5)
@@ -57,16 +59,33 @@ class EmailPage(ABC):
 
     #this fn load the emails and insert into the Treeview table as rows
     def display_emails(self):
+        for row in self.table.get_children():
+            self.table.delete(row)
+
         emails = self.get_emails()
         for email in emails:
             person = f"{email["other_name"]} ({email["other_email"]})"
             self.table.insert("", END, iid=str(email["id"]), values=(person, email["subject"], email["timestamp"]))
 
+    def get_selected_email_id(self):
+        rows = self.table.selection()
+
+        if len(rows) == 0:
+            mb.showerror("Error", "Pls choose an email first.")
+            return None
+        return int(rows[0])
+
+    def open_selected_email(self):
+        email_id = self.get_selected_email_id()
+        if email_id is None:
+            return
+        self.home.show_email_detail(box_type = self.box_type, email_id=email_id)
 
 
 class InboxPage(EmailPage):
     title = "Inbox"
     inbox_or_sent_box = "From"
+    box_type = "inbox"
 
     def get_emails(self):
         emails = db.get_inbox_mails(self.user_id)
@@ -76,11 +95,11 @@ class InboxPage(EmailPage):
 class SentPage(EmailPage):
     title = "Sent"
     inbox_or_sent_box = "To"
+    box_type = "sent"
 
     def get_emails(self):
         emails = db.get_sent_mails(self.user_id)
         return emails
-
 
 
 class WriteEmail(object):
@@ -137,3 +156,68 @@ class WriteEmail(object):
 
         mb.showinfo("Success", "Email sent successfully!")
         self.home.write_email()
+
+
+class EmailDetail(object):
+    def __init__(self, parent_frame, home, box_type, email_id):
+        #home is HomeScreen page it contains navigation between inbox, sent, write pages
+        self.home = home
+        self.user_id = home.user["id"]
+        self.email_id = email_id
+        self.box_type = box_type
+
+        #Main Frame of email detail
+        self.frame = Frame(master=parent_frame, background=BACKGROUND) #type: ignore
+        self.frame.pack(fill="both", expand=True, padx=15, pady=15)
+
+        try:
+            email = db.get_email_detail(self.email_id)
+
+        except EmailError as e:
+            mb.showerror("Error", str(e))
+            return
+
+        subject_text = f"Subject: {email["subject"]}"
+        from_text = f"From: {email["sender_name"]} ({email["sender_email"]})"
+        to_text = f"To: {email["receiver_name"]} ({email["receiver_email"]})"
+        date_text = f"Date: {email["timestamp"]}"
+
+        subject_label = Label(master=self.frame, text=subject_text, bg=BACKGROUND, fg=BLACK, font=LABEL_14, anchor="w",) #type: ignore
+        from_label = Label(master=self.frame, text=from_text, bg=BACKGROUND, fg=BLACK, font=LABEL_10, anchor="w") #type: ignore
+        to_label = Label(master=self.frame, text=to_text, bg=BACKGROUND, fg=BLACK, font=LABEL_10, anchor="w") #type: ignore
+        date_label = Label(master=self.frame, text=date_text, bg=BACKGROUND, fg=BLACK, font=LABEL_10, anchor="w") #type: ignore
+
+        subject_label.pack(side="top", fill="x")
+        from_label.pack(side="top", fill="x")
+        to_label.pack(side="top", fill="x")
+        date_label.pack(side="top", fill="x")
+
+        #body frame
+        body_frame = Frame(master=self.frame, bg=BACKGROUND) #type: ignore
+        body_frame.pack(side="top", fill="both", expand=True)
+
+        body_text = Text(master=body_frame, wrap="word", font=LABEL_12) #type: ignore
+        scrollbar = Scrollbar(master=body_frame, orient="vertical", command=body_text.yview)
+        body_text.configure(yscrollcommand=scrollbar.set)
+
+        body_text.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+
+        body_text.insert("1.0", email["body"])
+        body_text.configure(state="disabled")
+
+        bottom_frame = Frame(master=self.frame, bg=BACKGROUND) #type: ignore
+        bottom_frame.pack(side="bottom", fill="x", pady=(10,0))
+
+        back_btn = Button(master=bottom_frame, text="Back", bg=WHITE, fg=BLACK, command=self.go_back) #type: ignore
+        delete_btn = Button(master=bottom_frame, text="Delete", bg=WHITE, fg=BLACK) #type: ignore
+
+        back_btn.pack(side="left", padx=(5,10))
+        delete_btn.pack(side="left")
+
+    def go_back(self):
+        self.home.clear_content()
+        if self.box_type == "inbox":
+            self.home.show_inbox()
+        else:
+            self.home.show_sent_page()
