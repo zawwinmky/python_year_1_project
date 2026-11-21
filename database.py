@@ -60,6 +60,7 @@ def create_tables():
     connection.commit()
     connection.close()
 
+
 def find_user_by_email(email):
     connection = create_connection()
     cursor = connection.cursor()
@@ -130,6 +131,7 @@ def update_profile(user_id, new_name, new_email):
     connection.commit()
     connection.close()
 
+
 def find_user_by_id(user_id):
     connection = create_connection()
     cursor = connection.cursor()
@@ -138,6 +140,7 @@ def find_user_by_id(user_id):
     user = cursor.fetchone()
     connection.close()
     return user
+
 
 def change_password(user_id, current_password, new_password, confirm_password):
     if current_password == "" or new_password == "" or confirm_password == "":
@@ -163,6 +166,7 @@ def change_password(user_id, current_password, new_password, confirm_password):
     cursor.execute("UPDATE users SET password = ? WHERE id = ?", (new_hash, user_id))
     connection.commit()
     connection.close()
+
 
 def send_email(sender_id,receiver_email, subject, body_message):
 
@@ -241,3 +245,12 @@ def get_email_detail(email_id):
         raise EmailError("Email not found!")
 
     return email
+
+
+def delete_email(email_id):
+    connection = create_connection()
+    cursor = connection.cursor()
+    command = "DELETE FROM emails WHERE id = ?"
+    cursor.execute(command, (email_id,))
+    connection.commit()
+    connection.close()

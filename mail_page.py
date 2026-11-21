@@ -25,7 +25,7 @@ class EmailPage(ABC):
         bottom_bar.pack(side="bottom", fill="x", pady=(10, 0))
 
         open_btn = Button(master=bottom_bar, text="Open", bg=WHITE, fg=BLACK, font=LABEL_10, command=self.open_selected_email) #type: ignore
-        delete_btn = Button(master=bottom_bar, text="Delete", bg=WHITE, fg=BLACK, font=LABEL_10) #type: ignore
+        delete_btn = Button(master=bottom_bar, text="Delete", bg=WHITE, fg=BLACK, font=LABEL_10, command=self.delete_selected_email) #type: ignore
         refresh_btn = Button(master=bottom_bar, text="Refresh", bg=WHITE, fg=BLACK, font=LABEL_10, command=self.display_emails) #type: ignore
 
         open_btn.pack(side="left", padx=(0,5))
@@ -80,6 +80,20 @@ class EmailPage(ABC):
         if email_id is None:
             return
         self.home.show_email_detail(box_type = self.box_type, email_id=email_id)
+
+    def delete_selected_email(self):
+        email_id = self.get_selected_email_id()
+        if email_id is None:
+            return
+
+        confirm = mb.askyesno("Delete", "Are you sure? Email will be deleted.")
+        if confirm == False:
+            return
+
+        db.delete_email(email_id=email_id)
+        mb.showinfo("Success", "Email has been deleted.")
+
+        self.display_emails()
 
 
 class InboxPage(EmailPage):
@@ -210,7 +224,7 @@ class EmailDetail(object):
         bottom_frame.pack(side="bottom", fill="x", pady=(10,0))
 
         back_btn = Button(master=bottom_frame, text="Back", bg=WHITE, fg=BLACK, command=self.go_back) #type: ignore
-        delete_btn = Button(master=bottom_frame, text="Delete", bg=WHITE, fg=BLACK) #type: ignore
+        delete_btn = Button(master=bottom_frame, text="Delete", bg=WHITE, fg=BLACK, command=self.delete_email) #type: ignore
 
         back_btn.pack(side="left", padx=(5,10))
         delete_btn.pack(side="left")
@@ -221,3 +235,14 @@ class EmailDetail(object):
             self.home.show_inbox()
         else:
             self.home.show_sent_page()
+
+
+    def delete_email(self):
+        confirm = mb.askyesno("Delete", "Are you sure? Email will be deleted.")
+
+        if confirm == False:
+            return
+
+        db.delete_email(email_id=self.email_id)
+        mb.showinfo("Success", "Email has been deleted.")
+        self.go_back()
