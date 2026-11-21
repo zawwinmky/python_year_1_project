@@ -12,17 +12,17 @@ class LoginPage(object):
         self.login_frame = Frame(master=parent_window, bg=BACKGROUND) # type: ignore
 
         #labels
-        login_label = Label(master=self.login_frame, text="Login", bg=BACKGROUND, fg=BLACK, font=TITLE) # type: ignore
-        email_label = Label(master=self.login_frame, text="Email", bg=BACKGROUND, fg=BLACK, font=LABEL_14) # type: ignore
-        password_label = Label(master=self.login_frame, text="Password:", bg=BACKGROUND, fg=BLACK, font=LABEL_14) #type: ignore
+        login_label = Label(master=self.login_frame, text="Login", bg=BACKGROUND, fg=SIDE_BAR, font=TITLE) # type: ignore
+        email_label = Label(master=self.login_frame, text="Email:", bg=BACKGROUND, fg=BLACK, font=LABEL_14) # type: ignore
+        password_label = Label(master=self.login_frame, text="Password:", bg=BACKGROUND, fg=BLACK, font=LABEL_14)
 
         #entries
-        self.email_entry = Entry(master=self.login_frame, bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12) #type: ignore
-        self.password_entry = Entry(master=self.login_frame, show="*", bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12) #type: ignore
+        self.email_entry = Entry(master=self.login_frame, bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12)
+        self.password_entry = Entry(master=self.login_frame, show="*", bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12)
 
         #buttons
-        login_btn = Button(master=self.login_frame, text="Login", bg=WHITE, font=LABEL_14, command=self.login) #type: ignore
-        register_btn = Button(master=self.login_frame, text="Register", bg=WHITE, font=LABEL_12, command=self.app.register_page) #type: ignore
+        login_btn = Button(master=self.login_frame, text="Login", bg=WHITE, font=LABEL_14, command=self.login)
+        register_btn = Button(master=self.login_frame, text="Register", bg=WHITE, font=LABEL_12, command=self.app.register_page)
 
         #placing the frames and items
         self.login_frame.pack()
@@ -59,21 +59,21 @@ class RegisterPage(object):
         self.app = app
         self.register_frame = Frame(master=parent_window, bg=BACKGROUND) # type: ignore
         #labels
-        register_label = Label(master=self.register_frame, text="Register", bg=BACKGROUND, fg=BLACK, font=TITLE) # type: ignore
-        name_label = Label(master=self.register_frame, text="Name:", bg=BACKGROUND, fg=BLACK, font=LABEL_14) #type: ignore
+        register_label = Label(master=self.register_frame, text="Register", bg=BACKGROUND, fg=SIDE_BAR, font=TITLE) # type: ignore
+        name_label = Label(master=self.register_frame, text="Name:", bg=BACKGROUND, fg=BLACK, font=LABEL_14)
         email_label = Label(master=self.register_frame, text="Email:", bg=BACKGROUND, fg=BLACK, font=LABEL_14) # type: ignore
-        password_label = Label(master=self.register_frame, text="Password:", bg=BACKGROUND, fg=BLACK, font=LABEL_14) #type: ignore
-        cpassword_label = Label(master=self.register_frame, text="Confirm:", bg=BACKGROUND, fg=BLACK, font=LABEL_14) #type: ignore
+        password_label = Label(master=self.register_frame, text="Password:", bg=BACKGROUND, fg=BLACK, font=LABEL_14)
+        cpassword_label = Label(master=self.register_frame, text="Confirm:", bg=BACKGROUND, fg=BLACK, font=LABEL_14)
 
         #entries
-        self.name_entry = Entry(master=self.register_frame, bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12) #type: ignore
-        self.email_entry = Entry(master=self.register_frame, bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12) #type: ignore
-        self.password_entry = Entry(master=self.register_frame, show="*", bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12) #type: ignore
-        self.cpassword_entry = Entry(master=self.register_frame, show="*", bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12) #type: ignore
+        self.name_entry = Entry(master=self.register_frame, bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12)
+        self.email_entry = Entry(master=self.register_frame, bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12)
+        self.password_entry = Entry(master=self.register_frame, show="*", bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12)
+        self.cpassword_entry = Entry(master=self.register_frame, show="*", bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12)
 
         #buttons
-        register_btn = Button(master=self.register_frame, text="Register", bg=WHITE, font=LABEL_14, command=self.register) #type: ignore
-        login_btn = Button(master=self.register_frame, text="Login", bg=WHITE, font=LABEL_12, command=self.app.login_page) #type: ignore
+        register_btn = Button(master=self.register_frame, text="Register", fg=BLACK, bg=WHITE, font=LABEL_14, command=self.register)
+        login_btn = Button(master=self.register_frame, text="Login", bg=WHITE, fg=BLACK, font=LABEL_12, command=self.app.login_page)
 
         self.register_frame.pack()
 

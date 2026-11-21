@@ -1,8 +1,9 @@
-from config import * #type: ignore
+from config import *
 from tkinter import *
-from login_page import LoginPage, RegisterPage #type: ignore
-from home_page import HomeScreen #type: ignore
+from login_page import LoginPage, RegisterPage
+from home_page import HomeScreen
 import database as db
+from tkinter import messagebox as mb
 
 def main():
     db.create_tables()
@@ -10,7 +11,7 @@ def main():
     base_window = Tk()
     base_window.title("Email app")
     base_window.geometry("1000x800")
-    base_window.config(bg=BACKGROUND) #type: ignore
+    base_window.config(bg=BACKGROUND)
 
     app = App(window=base_window)
     app.login_page()
@@ -36,6 +37,9 @@ class App(object):
         RegisterPage(parent_window=self.window, app=self)
 
     def logout(self):
+        confirm = mb.askyesno("Confirm","Are you sure?")
+        if confirm == False:
+            return
         self.clear_screen()
         self.current_user = None
         LoginPage(parent_window=self.window, app=self)

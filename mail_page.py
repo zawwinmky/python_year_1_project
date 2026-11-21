@@ -1,5 +1,5 @@
 from tkinter import *
-from config import * #type: ignore
+from config import *
 import database as db
 from tkinter import messagebox as mb
 from tkinter import ttk
@@ -15,25 +15,25 @@ class EmailPage(ABC):
     def __init__(self, parent_frame, home):
         self.home = home
         self.user_id = home.user["id"]
-        self.frame = Frame(master=parent_frame, bg=BACKGROUND) #type: ignore
+        self.frame = Frame(master=parent_frame, bg=BACKGROUND)
         self.frame.pack(fill="both", expand=True, padx=15, pady=15)
 
-        title_label = Label(master=self.frame, text=self.title, bg=BACKGROUND, fg=BLACK, font=LABEL_16) #type: ignore
+        title_label = Label(master=self.frame, text=self.title, bg=BACKGROUND, fg=SIDE_BAR, font=LABEL_16)
         title_label.pack(side="top", anchor="w")
 
-        bottom_bar = Frame(master=self.frame, bg=BACKGROUND) #type: ignore
+        bottom_bar = Frame(master=self.frame, bg=BACKGROUND)
         bottom_bar.pack(side="bottom", fill="x", pady=(10, 0))
 
-        open_btn = Button(master=bottom_bar, text="Open", bg=WHITE, fg=BLACK, font=LABEL_10, command=self.open_selected_email) #type: ignore
-        delete_btn = Button(master=bottom_bar, text="Delete", bg=WHITE, fg=BLACK, font=LABEL_10, command=self.delete_selected_email) #type: ignore
-        refresh_btn = Button(master=bottom_bar, text="Refresh", bg=WHITE, fg=BLACK, font=LABEL_10, command=self.display_emails) #type: ignore
+        open_btn = Button(master=bottom_bar, text="Open", bg=WHITE, fg=BLACK, font=LABEL_10, command=self.open_selected_email)
+        delete_btn = Button(master=bottom_bar, text="Delete", bg=WHITE, fg=BLACK, font=LABEL_10, command=self.delete_selected_email)
+        refresh_btn = Button(master=bottom_bar, text="Refresh", bg=WHITE, fg=BLACK, font=LABEL_10, command=self.display_emails)
 
         open_btn.pack(side="left", padx=(0,5))
         delete_btn.pack(side="left", padx=5)
         refresh_btn.pack(side="left", padx=5)
 
         #table
-        table_frame = Frame(master=self.frame, background=BACKGROUND) #type: ignore
+        table_frame = Frame(master=self.frame, background=BACKGROUND)
         table_frame.pack(side="top", fill="both", expand=True, pady=(10, 0))
 
         self.table = ttk.Treeview(master=table_frame, columns=("person", "subject", "date"), show="headings", selectmode="browse")
@@ -119,20 +119,20 @@ class SentPage(EmailPage):
 class WriteEmail(object):
     def __init__(self, parent_frame, home):
         self.home = home
-        self.frame = Frame(master=parent_frame, bg=BACKGROUND) #type: ignore
+        self.frame = Frame(master=parent_frame, bg=BACKGROUND)
         self.frame.pack(fill="both", expand=True, padx=15, pady=15)
 
-        title_label = Label(master=self.frame, text="Write Email", bg=BACKGROUND, fg=BLACK, font=LABEL_16) #type: ignore
-        to_label = Label(master=self.frame, text="To: ", bg=BACKGROUND, fg=BLACK, font=LABEL_12) #type: ignore
-        subject_label = Label(master=self.frame, text="Subject: ", bg=BACKGROUND, fg=BLACK, font=LABEL_12) #type: ignore
-        message_label = Label(master=self.frame, text="Message: ", bg=BACKGROUND, fg=BLACK, font=LABEL_12) #type: ignore
+        title_label = Label(master=self.frame, text="Write Email", bg=BACKGROUND, fg=SIDE_BAR, font=LABEL_16)
+        to_label = Label(master=self.frame, text="To: ", bg=BACKGROUND, fg=BLACK, font=LABEL_12)
+        subject_label = Label(master=self.frame, text="Subject: ", bg=BACKGROUND, fg=BLACK, font=LABEL_12)
+        message_label = Label(master=self.frame, text="Message: ", bg=BACKGROUND, fg=BLACK, font=LABEL_12)
 
-        self.to_entry = Entry(master=self.frame, bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12) #type: ignore
-        self.subject_entry = Entry(master=self.frame, bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12) #type: ignore
-        self.body_message = Text(master=self.frame, height=12, wrap="word", bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12) #type: ignore
+        self.to_entry = Entry(master=self.frame, bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12)
+        self.subject_entry = Entry(master=self.frame, bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12)
+        self.body_message = Text(master=self.frame, height=12, wrap="word", bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12)
 
-        send_btn = Button(master=self.frame, text="Send", bg=WHITE, font=LABEL_12, command=self.send) #type: ignore
-        clear_btn = Button(master=self.frame, text="Clear", bg=WHITE, font=LABEL_12, command=self.clear) #type: ignore
+        send_btn = Button(master=self.frame, text="Send", bg=WHITE, font=LABEL_12, command=self.send)
+        clear_btn = Button(master=self.frame, text="Clear", bg=WHITE, font=LABEL_12, command=self.clear)
 
         title_label.grid(row=0, column=0, columnspan=2, sticky="w", pady=(0, 10))
 
@@ -181,7 +181,7 @@ class EmailDetail(object):
         self.box_type = box_type
 
         #Main Frame of email detail
-        self.frame = Frame(master=parent_frame, background=BACKGROUND) #type: ignore
+        self.frame = Frame(master=parent_frame, background=BACKGROUND)
         self.frame.pack(fill="both", expand=True, padx=15, pady=15)
 
         try:
@@ -196,10 +196,10 @@ class EmailDetail(object):
         to_text = f"To: {email["receiver_name"]} ({email["receiver_email"]})"
         date_text = f"Date: {email["timestamp"]}"
 
-        subject_label = Label(master=self.frame, text=subject_text, bg=BACKGROUND, fg=BLACK, font=LABEL_14, anchor="w",) #type: ignore
-        from_label = Label(master=self.frame, text=from_text, bg=BACKGROUND, fg=BLACK, font=LABEL_10, anchor="w") #type: ignore
-        to_label = Label(master=self.frame, text=to_text, bg=BACKGROUND, fg=BLACK, font=LABEL_10, anchor="w") #type: ignore
-        date_label = Label(master=self.frame, text=date_text, bg=BACKGROUND, fg=BLACK, font=LABEL_10, anchor="w") #type: ignore
+        subject_label = Label(master=self.frame, text=subject_text, bg=BACKGROUND, fg=BLACK, font=LABEL_14, anchor="w",)
+        from_label = Label(master=self.frame, text=from_text, bg=BACKGROUND, fg=BLACK, font=LABEL_10, anchor="w")
+        to_label = Label(master=self.frame, text=to_text, bg=BACKGROUND, fg=BLACK, font=LABEL_10, anchor="w")
+        date_label = Label(master=self.frame, text=date_text, bg=BACKGROUND, fg=BLACK, font=LABEL_10, anchor="w")
 
         subject_label.pack(side="top", fill="x")
         from_label.pack(side="top", fill="x")
@@ -207,10 +207,10 @@ class EmailDetail(object):
         date_label.pack(side="top", fill="x")
 
         #body frame
-        body_frame = Frame(master=self.frame, bg=BACKGROUND) #type: ignore
+        body_frame = Frame(master=self.frame, bg=BACKGROUND)
         body_frame.pack(side="top", fill="both", expand=True)
 
-        body_text = Text(master=body_frame, wrap="word", font=LABEL_12) #type: ignore
+        body_text = Text(master=body_frame, wrap="word", font=LABEL_12)
         scrollbar = Scrollbar(master=body_frame, orient="vertical", command=body_text.yview)
         body_text.configure(yscrollcommand=scrollbar.set)
 
@@ -220,11 +220,11 @@ class EmailDetail(object):
         body_text.insert("1.0", email["body"])
         body_text.configure(state="disabled")
 
-        bottom_frame = Frame(master=self.frame, bg=BACKGROUND) #type: ignore
+        bottom_frame = Frame(master=self.frame, bg=BACKGROUND)
         bottom_frame.pack(side="bottom", fill="x", pady=(10,0))
 
-        back_btn = Button(master=bottom_frame, text="Back", bg=WHITE, fg=BLACK, command=self.go_back) #type: ignore
-        delete_btn = Button(master=bottom_frame, text="Delete", bg=WHITE, fg=BLACK, command=self.delete_email) #type: ignore
+        back_btn = Button(master=bottom_frame, text="Back", bg=WHITE, fg=BLACK, command=self.go_back)
+        delete_btn = Button(master=bottom_frame, text="Delete", bg=WHITE, fg=BLACK, command=self.delete_email)
 
         back_btn.pack(side="left", padx=(5,10))
         delete_btn.pack(side="left")

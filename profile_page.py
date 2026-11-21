@@ -1,4 +1,4 @@
-from config import * #type: ignore
+from config import *
 from tkinter import *
 import database as db
 from database import ProfileError
@@ -9,30 +9,30 @@ class ProfilePage(object):
     def __init__(self, parent_frame, user):
         self.user = user
 
-        self.frame = Frame(master=parent_frame, bg=BACKGROUND) #type: ignore
+        self.frame = Frame(master=parent_frame, bg=BACKGROUND)
         self.frame.pack(fill="both", expand=True, padx=30, pady=15)
 
-        title_label = Label(master=self.frame, text="Profile", bg=BACKGROUND, fg=BLACK, font=TITLE) #type: ignore
-        name_label = Label(master=self.frame, text="Name:", bg=BACKGROUND, fg=BLACK, font=LABEL_14) #type: ignore
-        email_label = Label(master=self.frame, text="Email: ", bg=BACKGROUND, fg=BLACK, font=LABEL_14) #type: ignore
+        title_label = Label(master=self.frame, text="Profile", bg=BACKGROUND, fg=SIDE_BAR, font=TITLE)
+        name_label = Label(master=self.frame, text="Name:", bg=BACKGROUND, fg=BLACK, font=LABEL_14)
+        email_label = Label(master=self.frame, text="Email: ", bg=BACKGROUND, fg=BLACK, font=LABEL_14)
 
-        self.name_entry = Entry(master=self.frame, bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12) #type: ignore
-        self.email_entry = Entry(master=self.frame, bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12) #type: ignore
+        self.name_entry = Entry(master=self.frame, bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12)
+        self.email_entry = Entry(master=self.frame, bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12)
         self.name_entry.insert(0, self.user["name"])
         self.email_entry.insert(0, self.user["email"])
 
-        update_btn = Button(master=self.frame, text="Update Profile", bg=WHITE, fg=BLACK, font=LABEL_12, command=self.update_profile) #type: ignore
+        update_btn = Button(master=self.frame, text="Update Profile", bg=WHITE, fg=BLACK, font=LABEL_12, command=self.update_profile)
 
-        sub_title_label = Label(master=self.frame, text="Change Password", bg=BACKGROUND, fg=BLACK, font=LABEL_14) #type: ignore
-        current_pwd = Label(master=self.frame, text="Current", bg=BACKGROUND, fg=BLACK, font=LABEL_12) #type: ignore
-        password = Label(master=self.frame, text="New", bg=BACKGROUND, fg=BLACK, font=LABEL_12) #type: ignore
-        cpassword = Label(master=self.frame, text="Confirm", bg=BACKGROUND, fg=BLACK, font=LABEL_12) #type: ignore
+        sub_title_label = Label(master=self.frame, text="Change Password", bg=BACKGROUND, fg=BLACK, font=LABEL_14)
+        current_pwd = Label(master=self.frame, text="Current", bg=BACKGROUND, fg=BLACK, font=LABEL_12)
+        password = Label(master=self.frame, text="New", bg=BACKGROUND, fg=BLACK, font=LABEL_12)
+        cpassword = Label(master=self.frame, text="Confirm", bg=BACKGROUND, fg=BLACK, font=LABEL_12)
 
-        self.current_entry = Entry(master=self.frame, show="*", bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12) #type: ignore
-        self.password_entry = Entry(master=self.frame, show="*", bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12) #type: ignore
-        self.cpassword_entry = Entry(master=self.frame, show="*", bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12) #type: ignore
+        self.current_entry = Entry(master=self.frame, show="*", bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12)
+        self.password_entry = Entry(master=self.frame, show="*", bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12)
+        self.cpassword_entry = Entry(master=self.frame, show="*", bg=WHITE, fg=BLACK, insertbackground=BLACK, font=LABEL_12)
 
-        change_pwd_btn = Button(master=self.frame, text="Change Password", bg=WHITE, fg=BLACK, font=LABEL_12, command=self.change_pwd) #type: ignore
+        change_pwd_btn = Button(master=self.frame, text="Change Password", bg=WHITE, fg=BLACK, font=LABEL_12, command=self.change_pwd)
 
         title_label.grid(row=0, column=0, columnspan=2, pady=20)
 

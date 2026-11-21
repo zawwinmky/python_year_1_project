@@ -1,6 +1,6 @@
 import sqlite3
 import os
-from werkzeug.security import generate_password_hash, check_password_hash #type: ignore
+from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime as dt
 import re
 
@@ -189,12 +189,15 @@ def send_email(sender_id,receiver_email, subject, body_message):
     if receiver_email == "" or subject == "" or body_message == "":
         raise EmailError("Pls fill in all the required")
 
+    if not is_email_valid(value=receiver_email):
+        raise EmailError("Receiver email is invalid.")
+
     receiver = find_user_by_email(receiver_email)
 
     if receiver is None:
         raise EmailError("There is no user with that email.")
 
-    time = dt.now()
+    time = dt.now().strftime("%d/%m/%Y, %H:%M:%S")
 
     connection = create_connection()
     cursor = connection.cursor()
