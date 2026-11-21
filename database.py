@@ -2,7 +2,7 @@ import sqlite3
 import os
 from werkzeug.security import generate_password_hash, check_password_hash #type: ignore
 from datetime import datetime as dt
-
+import re
 
 FOLDER = os.path.dirname(os.path.abspath(__file__))
 DATABASE = os.path.join(FOLDER, "email_app.db")
@@ -22,6 +22,19 @@ class ProfileError(AppError):
 
 class EmailError(AppError):
     pass
+
+EMAIL_REGEX = re.compile(r"^[A-Za-z0-9_%+'-]+(?:\.[A-Za-z0-9_%+'-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63}$")
+
+def is_email_valid(value):
+    email = str(value).strip()
+
+    if len(email) > 254:
+        return False
+
+    if len(email.split("@")[0]) > 64:
+        return False
+
+    return EMAIL_REGEX.fullmatch(email) is not None
 
 
 def create_connection():
@@ -74,6 +87,9 @@ def find_user_by_email(email):
 def add_user(name, email, password, cpassword):
     if name == "" or email == "" or password == "" or cpassword == "":
         raise RegisterError("Pls fill in all fields!")
+
+    if not is_email_valid(value=email):
+        raise RegisterError("Pls enter a valid email address.")
 
     if len(password) < 6:
         raise RegisterError("Password must be at least 6 characters!")
