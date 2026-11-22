@@ -164,7 +164,7 @@ class WriteEmail(object):
 
         try:
             db.send_email(sender_id=self.home.user["id"], receiver_email=email, subject = subject, body_message=body_message)
-        except Exception as e:
+        except EmailError as e:
             mb.showerror("Error", str(e))
             return
 
